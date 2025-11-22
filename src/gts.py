@@ -621,8 +621,8 @@ class GTS:
 
         if not executable_cmd:
             raise Exception(
-                "[!] Kobo biçim dönüşümünü yapacak çalıştırılabilir dosya PATH'de bulunamadı. " \
-                "Dosyanın PATH'de bulunabilir olduğundan emin olun. " \
+                "[!] Kobo biçim dönüşümünü yapacak çalıştırılabilir dosya PATH'de ve betiğin olduğu klasörde bulunamadı. " \
+                "Dosyanın PATH'de veya betiğin çalıştığı klasörde bulunabilir olduğundan emin olun. " \
                 "Dosyaları edinmek için https://github.com/pgaskin/dictutil/releases adresine başvurun.")
         
         subprocess.Popen([executable_cmd, str(dosya_ismi),
