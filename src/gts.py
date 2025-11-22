@@ -637,7 +637,8 @@ class GTS:
         dosya_ismi = klasor / self.cikti_klasoru_ismi
         if not klasor.exists():
             klasor.mkdir()
-        glossary.write(filename=str(dosya_ismi), formatName="Mobi", kindlegen_path="kindlegen")
+        kindlegen_yolu = which_ex("kindlegen")
+        glossary.write(filename=str(dosya_ismi), formatName="Mobi", kindlegen_path=kindlegen_yolu)
         mobi_dosya_yolu = dosya_ismi / "OEBPS" / "content.mobi"
         if mobi_dosya_yolu.exists():
             mobi_dosya_yolu.replace(klasor / f"{self.cikti_klasoru_ismi}.mobi")
