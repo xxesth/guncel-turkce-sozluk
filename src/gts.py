@@ -3,6 +3,7 @@ import gzip
 import html
 import json
 import platform
+import os
 import re
 import subprocess
 import tarfile
@@ -21,6 +22,15 @@ from spylls.hunspell.dictionary import Dictionary
 
 SURUM = (2, 4, 3)
 BETIK_DY = Path(__file__).resolve().parent
+
+def which_ex(cmd: str) -> str:
+    path = os.environ.get("PATH", os.defpath)
+    cwd = Path.cwd()
+    arama_dizini = f"{path}{os.pathsep}{cwd}"
+    sonuc = which(cmd=cmd, path=arama_dizini)
+    if not sonuc: 
+        return sonuc
+    return str(Path(sonuc).resolve())
 
 def html_escape(metin: str) -> str:
     return html.escape(metin)
@@ -610,22 +620,14 @@ class GTS:
                 df_satirlar_yeni.append(satir)
         dosya_ismi.write_text("\n".join(df_satirlar_yeni), encoding="utf-8")
 
-        bin_name = self.platform_uygun_dictgen_ismi
-        local_bin_path = BETIK_DY / bin_name
-        executable_cmd = None
-        if local_bin_path.exists():
-            local_bin_path.chmod(0o755)
-            executable_cmd = str(local_bin_path)
-        elif which(bin_name):
-            executable_cmd = bin_name
-
-        if not executable_cmd:
+        dictgen_yolu = which_ex(self.platform_uygun_dictgen_ismi)
+        if not dictgen_yolu:
             raise Exception(
                 "[!] Kobo biçim dönüşümünü yapacak çalıştırılabilir dosya PATH'de ve betiğin olduğu klasörde bulunamadı. " \
                 "Dosyanın PATH'de veya betiğin çalıştığı klasörde bulunabilir olduğundan emin olun. " \
                 "Dosyaları edinmek için https://github.com/pgaskin/dictutil/releases adresine başvurun.")
         
-        subprocess.Popen([executable_cmd, str(dosya_ismi),
+        subprocess.Popen([dictgen_yolu, str(dosya_ismi),
                           "-o", str(klasor / "dicthtml-tr.zip")],
                           stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
