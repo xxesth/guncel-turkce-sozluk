@@ -446,7 +446,7 @@ class GTS:
             if platform.machine().startswith("arm") or platform.machine().startswith("aarch"):
                 return "dictgen-linux-arm"
             if platform.machine() in ["x86_64", "AMD64"]:
-                return "dictgen-linux-64bit" # BURAYA GELIYOR
+                return "dictgen-linux-64bit"
             # Belki 32bit kontrolü de yapabiliriz.
             raise Exception("[!] Sistem beklenmeyen bir mimari üzerinde çalışıyor.")
         raise Exception("[!] Betik bilinmeyen bir işletim sistemi üzerinde çalıştırılıyor.")
