@@ -446,7 +446,7 @@ class GTS:
             if platform.machine().startswith("arm") or platform.machine().startswith("aarch"):
                 return "dictgen-linux-arm"
             if platform.machine() in ["x86_64", "AMD64"]:
-                return "dictgen-linux-64bit"
+                return "dictgen-linux-64bit" # BURAYA GELIYOR
             # Belki 32bit kontrolü de yapabiliriz.
             raise Exception("[!] Sistem beklenmeyen bir mimari üzerinde çalışıyor.")
         raise Exception("[!] Betik bilinmeyen bir işletim sistemi üzerinde çalıştırılıyor.")
@@ -609,12 +609,23 @@ class GTS:
             else:
                 df_satirlar_yeni.append(satir)
         dosya_ismi.write_text("\n".join(df_satirlar_yeni), encoding="utf-8")
-        if not which(self.platform_uygun_dictgen_ismi):
+
+        bin_name = self.platform_uygun_dictgen_ismi
+        local_bin_path = BETIK_DY / bin_name
+        executable_cmd = None
+        if local_bin_path.exists():
+            local_bin_path.chmod(0o755)
+            executable_cmd = str(local_bin_path)
+        elif which(bin_name):
+            executable_cmd = bin_name
+
+        if not executable_cmd:
             raise Exception(
                 "[!] Kobo biçim dönüşümünü yapacak çalıştırılabilir dosya PATH'de bulunamadı. " \
                 "Dosyanın PATH'de bulunabilir olduğundan emin olun. " \
                 "Dosyaları edinmek için https://github.com/pgaskin/dictutil/releases adresine başvurun.")
-        subprocess.Popen([self.platform_uygun_dictgen_ismi, str(dosya_ismi),
+        
+        subprocess.Popen([executable_cmd, str(dosya_ismi),
                           "-o", str(klasor / "dicthtml-tr.zip")],
                           stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
