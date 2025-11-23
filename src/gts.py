@@ -28,7 +28,7 @@ def which_ex(cmd: str) -> str:
     cwd = Path.cwd()
     arama_dizini = f"{path}{os.pathsep}{cwd}"
     sonuc = which(cmd=cmd, path=arama_dizini)
-    if not sonuc: 
+    if not sonuc:
         return sonuc
     return str(Path(sonuc).resolve())
 
@@ -626,7 +626,7 @@ class GTS:
                 "[!] Kobo biçim dönüşümünü yapacak çalıştırılabilir dosya PATH'de ve betiğin olduğu klasörde bulunamadı. " \
                 "Dosyanın PATH'de veya betiğin çalıştığı klasörde bulunabilir olduğundan emin olun. " \
                 "Dosyaları edinmek için https://github.com/pgaskin/dictutil/releases adresine başvurun.")
-        
+
         subprocess.Popen([dictgen_yolu, str(dosya_ismi),
                           "-o", str(klasor / "dicthtml-tr.zip")],
                           stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
@@ -638,6 +638,11 @@ class GTS:
         if not klasor.exists():
             klasor.mkdir()
         kindlegen_yolu = which_ex("kindlegen")
+        if not kindlegen_yolu:
+            raise Exception(
+                "[!] Kindle MOBI dönüşümünü yapacak çalıştırılabilir dosya (kindlegen) PATH'de ve betiğin olduğu klasörde bulunamadı. " \
+                "Dosyanın PATH'de veya betiğin çalıştığı klasörde bulunabilir olduğundan emin olun. " \
+                "Dosyaları edinmek için https://web.archive.org/web/20190817070956/https://www.amazon.com/gp/feature.html?docId=1000765211 adresine başvurun.")
         glossary.write(filename=str(dosya_ismi), formatName="Mobi", kindlegen_path=kindlegen_yolu)
         mobi_dosya_yolu = dosya_ismi / "OEBPS" / "content.mobi"
         if mobi_dosya_yolu.exists():
